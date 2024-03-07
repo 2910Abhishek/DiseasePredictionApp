@@ -34,8 +34,13 @@ class _DiagonsisScreenState extends State<DiagonsisScreen> {
     for (var i = 0; i < symptomNames.length; i++) {
       formattedSymptoms.add(
         Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Text(symptomNames[i]),
+          padding: EdgeInsets.only(left: 5),
+          child: Text(
+            symptomNames[i],
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
         ),
       );
       if (i != symptomNames.length - 1) {
@@ -65,7 +70,7 @@ class _DiagonsisScreenState extends State<DiagonsisScreen> {
             SizedBox(height: 20),
             Text('You Might have a ${result.toString()}',
                 style: TextStyle(fontSize: 20, color: Colors.white)),
-            SizedBox(height: 10),
+            SizedBox(height: 50),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: formattedSymptoms,

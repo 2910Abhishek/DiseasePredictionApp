@@ -223,13 +223,23 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
                         final Map<String, dynamic> responseData =
                             json.decode(response.body);
                         print('Response Data: $responseData');
-                        final predictionList =
-                            responseData['prediction'] as List<dynamic>;
-                        final predictionString =
-                            predictionList.join(', '); // Convert list to string
-                        setState(() {
-                          result = predictionString;
-                        });
+                        final predictionList = responseData['prediction'];
+
+                        if (predictionList is List<dynamic>) {
+                          final predictionString = predictionList
+                              .join(', '); // Convert list to string
+                          setState(() {
+                            result = predictionString;
+                          });
+                        } else if (predictionList is String) {
+                          setState(() {
+                            result =
+                                predictionList; // No need to join, it's already a string
+                          });
+                        } else {
+                          print(
+                              'Unexpected data type for predictionList: ${predictionList.runtimeType}');
+                        }
                       } else {
                         print('Error: ${response.reasonPhrase}');
                       }
@@ -319,13 +329,23 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
                 final Map<String, dynamic> responseData =
                     json.decode(response.body);
                 print('Response Data: $responseData');
-                final predictionList =
-                    responseData['prediction'] as List<dynamic>;
-                final predictionString =
-                    predictionList.join(', '); // Convert list to string
-                setState(() {
-                  result = predictionString;
-                });
+                final predictionList = responseData['prediction'];
+
+                if (predictionList is List<dynamic>) {
+                  final predictionString =
+                      predictionList.join(', '); // Convert list to string
+                  setState(() {
+                    result = predictionString;
+                  });
+                } else if (predictionList is String) {
+                  setState(() {
+                    result =
+                        predictionList; // No need to join, it's already a string
+                  });
+                } else {
+                  print(
+                      'Unexpected data type for predictionList: ${predictionList.runtimeType}');
+                }
               } else {
                 print('Error: ${response.reasonPhrase}');
               }
