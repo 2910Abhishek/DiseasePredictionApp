@@ -2,7 +2,7 @@ import numpy as np
 import pickle 
 from flask import Flask, request, jsonify
 
-model = pickle.load(open('D:\SGP-2\TrainedModel', 'rb'))
+model = pickle.load(open('D:\ML HeathCare App SGP - II\DiseasePredictionApp\final_api', 'rb'))
 
 app = Flask(__name__)
 
