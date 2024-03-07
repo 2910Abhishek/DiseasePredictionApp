@@ -2,14 +2,14 @@ from flask import Flask, request, jsonify
 import numpy as np
 import pickle 
 
-model = pickle.load(open('D:\SGP-2\TrainedModel', 'rb'))
+model = pickle.load(open('D:\ML HeathCare App SGP - II\DiseasePredictionApp\FlaskAPI\TrainedModel', 'rb'))
 app = Flask(__name__)
 
 def your_ml_model_function(symptom_vector):
     output = model.predict(symptom_vector.reshape(1,-1))
     return output
 
-@app.route('/prediction', methods=['POST'])
+@app.route('/prediction', methods=['GET'])
 def prediction():
     selected_symptoms = request.json.get('selected_symptoms')
     print(selected_symptoms)

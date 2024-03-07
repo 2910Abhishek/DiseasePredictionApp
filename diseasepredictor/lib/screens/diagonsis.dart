@@ -1,42 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:diseasepredictor/screens/symptoms.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:diseasepredictor/screens/symptoms.dart';
 
 class DiagonsisScreen extends StatefulWidget {
-  DiagonsisScreen({Key? key, required this.selectedSymptoms}) : super(key: key);
+  DiagonsisScreen(
+      {Key? key, required this.selectedSymptoms, required this.result})
+      : super(key: key);
   final List<Symptoms> selectedSymptoms;
+  final String result;
 
   @override
   State<DiagonsisScreen> createState() {
-    return _DiagonsisScreenState(selectedSymptoms);
+    return _DiagonsisScreenState(selectedSymptoms, result);
   }
 }
 
 class _DiagonsisScreenState extends State<DiagonsisScreen> {
-  _DiagonsisScreenState(this.selectedSymptoms);
-
   final List<Symptoms> selectedSymptoms;
+  final String result;
 
-  Future<void> submitSymptoms(List<int> selectedSymptoms) async {
-    final url = Uri.parse('http://127.0.0.1:5000/predict');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({'selected_symptoms': selectedSymptoms}),
-    );
-    if (response.statusCode == 200) {
-      // Handle successful response, e.g., display prediction result
-      print('Prediction Result: ${json.decode(response.body)['prediction']}');
-    } else {
-      // Handle error response
-      print('Error: ${response.reasonPhrase}');
-    }
-  }
+  _DiagonsisScreenState(this.selectedSymptoms, this.result);
 
   @override
   Widget build(BuildContext context) {
-    List<String> symptomNames = widget.selectedSymptoms.map((symptom) {
+    List<String> symptomNames = selectedSymptoms.map((symptom) {
       String symptomString = symptom.toString();
       return symptomString.substring(
           symptomString.indexOf('.') + 1); // Extracting substring after the dot
@@ -75,7 +63,8 @@ class _DiagonsisScreenState extends State<DiagonsisScreen> {
               style: TextStyle(fontSize: 22),
             ),
             SizedBox(height: 20),
-            Text('You Might have a cold', style: TextStyle(fontSize: 20)),
+            Text('You Might have a ${result.toString()}',
+                style: TextStyle(fontSize: 20, color: Colors.white)),
             SizedBox(height: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,31 +73,14 @@ class _DiagonsisScreenState extends State<DiagonsisScreen> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        height: 50,
-        margin: const EdgeInsets.all(10),
-        child: ElevatedButton(
-          onPressed: () {
-            List<int> symptomVector =
-                List.filled(131, 0); // Initialize with zeros
-            selectedSymptoms.forEach((symptom) {
-              print(symptom);
-              symptomVector[symptom.index] =
-                  1; // Set selected symptom positions to 1
-            });
-            print(symptomVector);
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) =>
-                    DiagonsisScreen(selectedSymptoms: selectedSymptoms),
-              ),
-            );
-          },
-          child: const Center(
-            child: Text('Talk to a doctor now'),
-          ),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          List<int> symptomVector = List.filled(131, 0);
+          selectedSymptoms.forEach((symptom) {
+            symptomVector[symptom.index] = 1;
+          });
+        },
+        child: Icon(Icons.chat),
       ),
     );
   }

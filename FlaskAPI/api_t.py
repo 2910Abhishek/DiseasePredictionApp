@@ -2,7 +2,7 @@ import numpy as np
 import pickle 
 from flask import Flask, request, jsonify
 
-model = pickle.load(open('D:\SGP-2\TrainedModel', 'rb'))
+model = pickle.load(open('D:\ML HeathCare App SGP - II\DiseasePredictionApp\FlaskAPI\TrainedModel', 'rb'))
 
 app = Flask(__name__)
 
@@ -65,32 +65,22 @@ def model_fun(symptom_vector):
     
     return key_from_value(disease,output)
 
-@app.route('/prediction', methods=['GET'])
+@app.route('/prediction', methods=['POST'])
 def prediction():
-    selected_symptoms = request.json.get('selected_symptoms')
-    print(selected_symptoms)
-    symptom_vector = np.zeros(131) 
-    i = 0
-    for symptom in selected_symptoms:
-        if(symptom == 1):
-            symptom_vector[i] = 1
-        i = i + 1
+    symptom_vector = request.json.get('symptom_vector')
+    print(symptom_vector)
+    if symptom_vector is None or len(symptom_vector) != 131:
+        return jsonify({'error': 'Invalid symptom vector'}), 400
+
+    symptom_vector = list(map(int, symptom_vector))
+
+    result = model_fun(np.array(symptom_vector))
+    print(result.tolist())
+    return jsonify({'prediction': result.tolist()})
 
     result = model_fun(symptom_vector)
     print(result)
     return jsonify({'prediction': result}) 
-    # return jsonify(0)
 
 if __name__ == '__main__':
     app.run(debug=True)
-# selected_symptoms = request.json.get('selected_symptoms')
-# print(selected_symptoms)
-# v = [0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0]
-
-# symptom_vector = np.zeros(131) 
-# i = 0
-# for symptom in v:
-#         if(symptom == 1):
-#             symptom_vector[i] = 1
-#         i = i + 1
-# print(model_fun(symptom_vector))

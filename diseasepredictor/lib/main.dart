@@ -29,6 +29,7 @@ void main() async {
 
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark().copyWith(
         colorScheme: kDarkColorScheme,
         cardTheme: const CardTheme().copyWith(
@@ -70,19 +71,18 @@ void main() async {
             ),
       ),
       themeMode: ThemeMode.system,
-      // home: StreamBuilder(
-      //     stream: FirebaseAuth.instance.authStateChanges(),
-      //     builder: (ctx, snapshot) {
-      //       if (snapshot.connectionState == ConnectionState.waiting) {
-      //         return CircularProgressIndicator(); // Show loading indicator while checking authentication state
-      //       }
-      //       if (snapshot.hasData) {
-      //         return TabScreen();
-      //       } else {
-      //         return AuthScreen();
-      //       }
-      //     }),
-      home: AuthScreen(),
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // Show loading indicator while checking authentication state
+            }
+            if (snapshot.hasData) {
+              return TabScreen();
+            } else {
+              return AuthScreen();
+            }
+          }),
     ),
   );
 }
