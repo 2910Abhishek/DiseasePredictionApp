@@ -74,10 +74,6 @@ def prediction():
 
     symptom_vector = list(map(int, symptom_vector))
 
-    result = model_fun(np.array(symptom_vector))
-    print(result.tolist())
-    return jsonify({'prediction': result.tolist()})
-
     result = model_fun(symptom_vector)
     print(result)
     return jsonify({'prediction': result}) 
