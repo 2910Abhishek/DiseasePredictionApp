@@ -191,11 +191,19 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
                 margin: const EdgeInsets.all(10),
                 child: ElevatedButton(
                   onPressed: () {
+                    List<int> symptomVector =
+                        List.filled(131, 0); // Initialize with zeros
+                    selectedSymptoms.forEach((symptom) {
+                      print(symptom);
+                      symptomVector[symptom.index] =
+                          1; // Set selected symptom positions to 1
+                    });
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            DiagonsisScreen(selectedSymptoms: selectedSymptoms),
+                        builder: (context) => DiagonsisScreen(
+                            selectedSymptoms: selectedSymptoms,
+                            symptomVector: symptomVector),
                       ),
                     );
                   },
@@ -252,8 +260,10 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
             print(symptomVector);
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) =>
-                    DiagonsisScreen(selectedSymptoms: selectedSymptoms),
+                builder: (context) => DiagonsisScreen(
+                  selectedSymptoms: selectedSymptoms,
+                  symptomVector: symptomVector,
+                ),
               ),
             );
 
