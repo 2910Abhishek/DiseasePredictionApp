@@ -5,39 +5,22 @@ import 'package:diseasepredictor/screens/symptoms.dart';
 
 class DiagonsisScreen extends StatefulWidget {
   DiagonsisScreen(
-      {Key? key, required this.selectedSymptoms, required this.symptomVector})
+      {Key? key, required this.selectedSymptoms, required this.result})
       : super(key: key);
   final List<Symptoms> selectedSymptoms;
-  final List<int> symptomVector;
+  final String result;
 
   @override
   State<DiagonsisScreen> createState() {
-    return _DiagonsisScreenState(selectedSymptoms, symptomVector);
+    return _DiagonsisScreenState(selectedSymptoms, result);
   }
 }
 
 class _DiagonsisScreenState extends State<DiagonsisScreen> {
   final List<Symptoms> selectedSymptoms;
-  final List<int> symptomVector;
-  String result = '';
+  final String result;
 
-  _DiagonsisScreenState(this.selectedSymptoms, this.symptomVector);
-
-  Future<void> submitSymptoms(List<int> selectedSymptoms) async {
-    final url = Uri.parse('http://127.0.0.1:5000/prediction');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({'selected_symptoms': symptomVector}),
-    );
-    if (response.statusCode == 200) {
-      // Handle successful response, e.g., display prediction result
-      print('Prediction Result: ${json.decode(response.body)['prediction']}');
-    } else {
-      // Handle error response
-      print('Error: ${response.reasonPhrase}');
-    }
-  }
+  _DiagonsisScreenState(this.selectedSymptoms, this.result);
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +63,8 @@ class _DiagonsisScreenState extends State<DiagonsisScreen> {
               style: TextStyle(fontSize: 22),
             ),
             SizedBox(height: 20),
-            Text('You Might have a $result', style: TextStyle(fontSize: 20)),
+            Text('You Might have a ${result.toString()}',
+                style: TextStyle(fontSize: 20, color: Colors.white)),
             SizedBox(height: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,30 +79,6 @@ class _DiagonsisScreenState extends State<DiagonsisScreen> {
           selectedSymptoms.forEach((symptom) {
             symptomVector[symptom.index] = 1;
           });
-
-          try {
-            final url = Uri.parse('http://127.0.0.1:5000/prediction');
-            final response = await http.post(
-              url,
-              headers: {'Content-Type': 'application/json'},
-              body: json.encode({'selected_symptoms': symptomVector}),
-            );
-
-            print('Response Status Code: ${response.statusCode}');
-            print('Response Body: ${response.body}');
-
-            if (response.statusCode == 200) {
-              final Map<String, dynamic> responseData =
-                  json.decode(response.body);
-              setState(() {
-                result = responseData['prediction'];
-              });
-            } else {
-              print('Error: ${response.reasonPhrase}');
-            }
-          } catch (e) {
-            print('Error: $e');
-          }
         },
         child: Icon(Icons.chat),
       ),

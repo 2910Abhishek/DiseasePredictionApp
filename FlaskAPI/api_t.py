@@ -14,10 +14,15 @@ def model_fun(symptom_vector):
 @app.route('/prediction', methods=['POST'])
 def prediction():
     symptom_vector = request.json.get('symptom_vector')
+    print(symptom_vector)
     if symptom_vector is None or len(symptom_vector) != 131:
         return jsonify({'error': 'Invalid symptom vector'}), 400
 
+    # Convert the elements of 'symptom_vector' to integers
+    symptom_vector = list(map(int, symptom_vector))
+
     result = model_fun(np.array(symptom_vector))
+    print(result.tolist())
     return jsonify({'prediction': result.tolist()})
 
     # return jsonify(0)
