@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:diseasepredictor/screens/tabs.dart';
 import 'package:diseasepredictor/widgets/user_image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -20,7 +23,8 @@ class _AuthScreenState extends State<AuthScreen> {
   var _islogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
-  var 
+  File? _selectedImage;
+  var _isAuthenticating = false;
 
   Future<void> _showErrorDialog(String message) async {
     return showDialog(
@@ -45,11 +49,15 @@ class _AuthScreenState extends State<AuthScreen> {
   void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (!isValid) {
+    if (!_islogin && _selectedImage == null) {
       return;
     }
 
     _form.currentState!.save();
+
+    setState(() {
+      _isAuthenticating = true;
+    });
 
     try {
       if (_islogin) {
@@ -68,8 +76,20 @@ class _AuthScreenState extends State<AuthScreen> {
           password: _enteredPassword,
         );
         // Handle successful sign up
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('user_Image')
+            .child('${userCredential.user!.uid}.jpg');
+
+        await storageRef.putFile(_selectedImage!);
+
+        // Set _isAuthenticating to false after successful sign up
+        setState(() {
+          _isAuthenticating = false;
+        });
       }
     } on FirebaseAuthException catch (error) {
+      // Handle authentication errors
       String errorMessage = 'Authentication failed';
       if (error.code == 'wrong-password') {
         errorMessage = 'Invalid password';
@@ -80,8 +100,20 @@ class _AuthScreenState extends State<AuthScreen> {
       }
       _showErrorDialog(errorMessage);
     } catch (error) {
+      // Handle other errors
       print('Error: $error');
       _showErrorDialog('An error occurred. Please try again later.');
+    } finally {
+      // Set _isAuthenticating to false after the authentication process is complete
+      setState(() {
+        _isAuthenticating = false;
+      });
+      if (!_islogin) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => TabScreen()),
+        );
+      }
     }
   }
 
@@ -114,7 +146,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (!_islogin) Center(child: UserImagePicker()),
+                        if (!_islogin)
+                          Center(child:
+                              UserImagePicker(onPickImage: (pickedimage) {
+                            _selectedImage = pickedimage;
+                          })),
                         Text(
                           'Email',
                           style: TextStyle(fontWeight: FontWeight.bold),
@@ -168,48 +204,61 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
             SizedBox(height: 20), // Add spacing between the Card and buttons
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20), // Add horizontal padding to buttons
-              child: SizedBox(
-                width: double.infinity, // Take full width
-                child: ElevatedButton(
-                  onPressed: _submit,
-                  style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Visibility(
+                visible: !_isAuthenticating,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _submit,
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(188, 0, 0, 0),
-                      foregroundColor: Colors.white),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20), // Padding for the button
-                    child: Text(
-                      _islogin ? 'Login' : 'Sign Up',
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        _islogin ? 'Login' : 'Sign Up',
+                      ),
                     ),
                   ),
                 ),
+                replacement: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
+
             SizedBox(height: 10), // Add spacing between buttons
+
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20), // Add horizontal padding to buttons
-              child: SizedBox(
-                width: double.infinity, // Take full width
-                child: TextButton(
-                  style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Visibility(
+                visible: !_isAuthenticating,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
                       backgroundColor: Color.fromARGB(155, 0, 0, 0),
-                      foregroundColor: Colors.white),
-                  onPressed: () {
-                    setState(() {
-                      _islogin = !_islogin;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20), // Padding for the button
-                    child: Text(_islogin
-                        ? 'Create an account'
-                        : 'I already have an account'),
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _islogin = !_islogin;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        _islogin
+                            ? 'Create an account'
+                            : 'I already have an account',
+                      ),
+                    ),
                   ),
                 ),
+                replacement: const SizedBox
+                    .shrink(), // Hide the button when authenticating
               ),
             ),
           ],
