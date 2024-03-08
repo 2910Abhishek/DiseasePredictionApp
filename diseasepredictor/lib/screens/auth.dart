@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diseasepredictor/screens/tabs.dart';
 import 'package:diseasepredictor/widgets/user_image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,6 +25,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredPassword = '';
   File? _selectedImage;
   var _isAuthenticating = false;
+  var _enteredUsername = '';
 
   Future<void> _showErrorDialog(String message) async {
     return showDialog(
@@ -83,6 +84,16 @@ class _AuthScreenState extends State<AuthScreen> {
 
         await storageRef.putFile(_selectedImage!);
 
+        final imageurl = await storageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+          'username': _enteredUsername,
+          'email': _enteredEmail,
+          'image_url': imageurl,
+        });
         // Set _isAuthenticating to false after successful sign up
         setState(() {
           _isAuthenticating = false;
@@ -145,7 +156,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         if (!_islogin)
                           Center(child:
                               UserImagePicker(onPickImage: (pickedimage) {
@@ -175,7 +186,40 @@ class _AuthScreenState extends State<AuthScreen> {
                             _enteredEmail = value!;
                           },
                         ),
-                        SizedBox(height: 20), // Add some space between fields
+                        SizedBox(height: 10),
+                        if (!_islogin)
+                          Container(
+                            // margin: EdgeInsets.only(
+                            //     top: 20), // Add some space between fields
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Username',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value == null ||
+                                        value.isEmpty ||
+                                        value.trim().length < 4) {
+                                      return 'Please enter at least 4 characters';
+                                    }
+                                    return null;
+                                  },
+                                  decoration:
+                                      InputDecoration(labelText: 'Username'),
+                                  enableSuggestions: false,
+                                  onSaved: (value) {
+                                    _enteredUsername = value!;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(
                           'Password',
                           style: TextStyle(fontWeight: FontWeight.bold),
