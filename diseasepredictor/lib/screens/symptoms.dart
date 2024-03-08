@@ -2,6 +2,7 @@ import 'package:diseasepredictor/widgets/dropdownbuttonList.dart';
 import 'package:flutter/material.dart';
 import 'package:diseasepredictor/widgets/Label.dart';
 import 'package:diseasepredictor/screens/diagonsis.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -165,30 +166,35 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
       return Material(
         child: Stack(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 40),
-                LabelWidget(label: 'Symptom 1'),
-                DropdownButtonList(savedSymptoms: selectedSymptoms),
-                SizedBox(height: 40),
-                LabelWidget(label: 'Symptom 2'),
-                DropdownButtonList(savedSymptoms: selectedSymptoms),
-                SizedBox(height: 40),
-                LabelWidget(label: 'Symptom 3'),
-                DropdownButtonList(savedSymptoms: selectedSymptoms),
-                SizedBox(height: 40),
-                LabelWidget(label: 'Symptom 4'),
-                DropdownButtonList(savedSymptoms: selectedSymptoms),
-                SizedBox(height: 40),
-                LabelWidget(label: 'Symptom 5'),
-                DropdownButtonList(savedSymptoms: selectedSymptoms),
-                SizedBox(height: 40),
-                LabelWidget(label: 'Symptom 6'),
-                DropdownButtonList(savedSymptoms: selectedSymptoms),
-                SizedBox(height: 40),
-              ],
+            SizedBox(
+              height: 500,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 30),
+                    LabelWidget(label: 'Symptom 1'),
+                    DropdownButtonList(savedSymptoms: selectedSymptoms),
+                    SizedBox(height: 30),
+                    LabelWidget(label: 'Symptom 2'),
+                    DropdownButtonList(savedSymptoms: selectedSymptoms),
+                    SizedBox(height: 30),
+                    LabelWidget(label: 'Symptom 3'),
+                    DropdownButtonList(savedSymptoms: selectedSymptoms),
+                    SizedBox(height: 30),
+                    LabelWidget(label: 'Symptom 4'),
+                    DropdownButtonList(savedSymptoms: selectedSymptoms),
+                    SizedBox(height: 30),
+                    LabelWidget(label: 'Symptom 5'),
+                    DropdownButtonList(savedSymptoms: selectedSymptoms),
+                    SizedBox(height: 30),
+                    LabelWidget(label: 'Symptom 6'),
+                    DropdownButtonList(savedSymptoms: selectedSymptoms),
+                    SizedBox(height: 30),
+                  ],
+                ),
+              ),
             ),
             Positioned(
               bottom: 10,
@@ -209,7 +215,8 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
                     });
                     print('Symptom Vector: $symptomVector');
                     try {
-                      final url = Uri.parse('http://10.0.2.2:5000/prediction');
+                      final url = Uri.parse('http://192.168.46.109/prediction');
+
                       final response = await http.post(
                         url,
                         headers: {'Content-Type': 'application/json'},
@@ -273,30 +280,35 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
         title: Text(widget.title!),
       ),
       body: Material(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 40),
-            LabelWidget(label: 'Symptom 1'),
-            DropdownButtonList(savedSymptoms: selectedSymptoms),
-            SizedBox(height: 40),
-            LabelWidget(label: 'Symptom 2'),
-            DropdownButtonList(savedSymptoms: selectedSymptoms),
-            SizedBox(height: 40),
-            LabelWidget(label: 'Symptom 3'),
-            DropdownButtonList(savedSymptoms: selectedSymptoms),
-            SizedBox(height: 40),
-            LabelWidget(label: 'Symptom 4'),
-            DropdownButtonList(savedSymptoms: selectedSymptoms),
-            SizedBox(height: 40),
-            LabelWidget(label: 'Symptom 5'),
-            DropdownButtonList(savedSymptoms: selectedSymptoms),
-            SizedBox(height: 40),
-            LabelWidget(label: 'Symptom 6'),
-            DropdownButtonList(savedSymptoms: selectedSymptoms),
-            SizedBox(height: 40),
-          ],
+        child: SizedBox(
+          height: 500,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 30),
+                LabelWidget(label: 'Symptom 1'),
+                DropdownButtonList(savedSymptoms: selectedSymptoms),
+                SizedBox(height: 30),
+                LabelWidget(label: 'Symptom 2'),
+                DropdownButtonList(savedSymptoms: selectedSymptoms),
+                SizedBox(height: 30),
+                LabelWidget(label: 'Symptom 3'),
+                DropdownButtonList(savedSymptoms: selectedSymptoms),
+                SizedBox(height: 30),
+                LabelWidget(label: 'Symptom 4'),
+                DropdownButtonList(savedSymptoms: selectedSymptoms),
+                SizedBox(height: 30),
+                LabelWidget(label: 'Symptom 5'),
+                DropdownButtonList(savedSymptoms: selectedSymptoms),
+                SizedBox(height: 30),
+                LabelWidget(label: 'Symptom 6'),
+                DropdownButtonList(savedSymptoms: selectedSymptoms),
+                SizedBox(height: 30),
+              ],
+            ),
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -315,7 +327,8 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
             });
             print('Symptom Vector: $symptomVector');
             try {
-              final url = Uri.parse('http://10.0.2.2:5000/prediction');
+              final url = Uri.parse('http://192.168.46.109/prediction');
+
               final response = await http.post(
                 url,
                 headers: {'Content-Type': 'application/json'},
