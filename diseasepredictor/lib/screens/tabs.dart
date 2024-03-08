@@ -1,4 +1,5 @@
 import 'package:diseasepredictor/screens/Hospital.dart';
+import 'package:diseasepredictor/screens/auth.dart';
 import 'package:diseasepredictor/screens/home.dart';
 import 'package:diseasepredictor/screens/maps.dart';
 import 'package:diseasepredictor/screens/profile.dart';
@@ -50,8 +51,20 @@ class _TabsScreenState extends State<TabScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               FirebaseAuth.instance.signOut();
+              try {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AuthScreen()), // Navigate to your authentication screen
+                );
+                // Navigate to login screen or perform any other actions after sign out.
+              } catch (e) {
+                print("Error signing out: $e");
+              }
             },
             icon: Icon(
               Icons.exit_to_app,

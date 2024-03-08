@@ -1,4 +1,5 @@
 import 'package:diseasepredictor/screens/tabs.dart';
+import 'package:diseasepredictor/widgets/user_image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -19,6 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _islogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
+  var 
 
   Future<void> _showErrorDialog(String message) async {
     return showDialog(
@@ -112,6 +114,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (!_islogin) Center(child: UserImagePicker()),
                         Text(
                           'Email',
                           style: TextStyle(fontWeight: FontWeight.bold),
