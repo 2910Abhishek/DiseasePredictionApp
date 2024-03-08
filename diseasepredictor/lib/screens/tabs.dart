@@ -3,6 +3,7 @@ import 'package:diseasepredictor/screens/home.dart';
 import 'package:diseasepredictor/screens/maps.dart';
 import 'package:diseasepredictor/screens/profile.dart';
 import 'package:diseasepredictor/screens/symptoms.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class TabScreen extends StatefulWidget {
@@ -47,6 +48,17 @@ class _TabsScreenState extends State<TabScreen> {
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          )
+        ],
       ),
       body: Column(
         children: [
