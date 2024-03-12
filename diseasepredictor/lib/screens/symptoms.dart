@@ -215,7 +215,8 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
                     });
                     print('Symptom Vector: $symptomVector');
                     try {
-                      final url = Uri.parse('http://192.168.46.109/prediction');
+                      final url =
+                          Uri.parse('http://Your_IPV4_Address:5000/prediction');
 
                       final response = await http.post(
                         url,
@@ -327,7 +328,7 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
             });
             print('Symptom Vector: $symptomVector');
             try {
-              final url = Uri.parse('http://192.168.46.109/prediction');
+              final url = Uri.parse('http://Your_IPV4_Address:5000/prediction');
 
               final response = await http.post(
                 url,

@@ -76,4 +76,4 @@ def prediction():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host= 'Your_IPV4_Address', port= 5000)
