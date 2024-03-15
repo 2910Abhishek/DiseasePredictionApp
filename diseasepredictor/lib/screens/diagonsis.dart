@@ -1,52 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:diseasepredictor/screens/symptoms.dart';
 
 class DiagonsisScreen extends StatefulWidget {
-  DiagonsisScreen(
-      {Key? key, required this.selectedSymptoms, required this.result})
-      : super(key: key);
-  final List<Symptoms> selectedSymptoms;
+  DiagonsisScreen({
+    Key? key,
+    required this.selectedSymptoms,
+    required this.result,
+  }) : super(key: key);
+
+  final List<String> selectedSymptoms;
   final String result;
 
   @override
-  State<DiagonsisScreen> createState() {
-    return _DiagonsisScreenState(selectedSymptoms, result);
-  }
+  State<DiagonsisScreen> createState() => _DiagonsisScreenState();
 }
 
 class _DiagonsisScreenState extends State<DiagonsisScreen> {
-  final List<Symptoms> selectedSymptoms;
-  final String result;
-
-  _DiagonsisScreenState(this.selectedSymptoms, this.result);
-
   @override
   Widget build(BuildContext context) {
-    List<String> symptomNames = selectedSymptoms.map((symptom) {
-      String symptomString = symptom.toString();
-      return symptomString.substring(
-          symptomString.indexOf('.') + 1); // Extracting substring after the dot
-    }).toList();
-
-    List<Widget> formattedSymptoms = [];
-    for (var i = 0; i < symptomNames.length; i++) {
-      formattedSymptoms.add(
-        Padding(
-          padding: EdgeInsets.only(left: 5),
-          child: Text(
-            symptomNames[i],
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-        ),
-      );
-      if (i != symptomNames.length - 1) {
-        formattedSymptoms.add(SizedBox(height: 10));
-      }
-    }
+    print('Selected Symptoms: ${widget.selectedSymptoms}'); // Debug print
 
     return Scaffold(
       appBar: AppBar(
@@ -60,32 +31,38 @@ class _DiagonsisScreenState extends State<DiagonsisScreen> {
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
           children: [
             Text(
               'Based on your symptoms, here\'s what we found',
               style: TextStyle(fontSize: 22),
             ),
             SizedBox(height: 20),
-            Text('You Might have a ${result.toString()}',
-                style: TextStyle(fontSize: 20, color: Colors.white)),
-            SizedBox(height: 50),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: formattedSymptoms,
+            Text(
+              'You Might have a ${widget.result}',
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Selected Symptoms:',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: widget.selectedSymptoms.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child: Text(
+                      widget.selectedSymptoms[index],
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          List<int> symptomVector = List.filled(131, 0);
-          selectedSymptoms.forEach((symptom) {
-            symptomVector[symptom.index] = 1;
-          });
-        },
-        child: Icon(Icons.chat),
       ),
     );
   }

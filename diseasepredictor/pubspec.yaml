@@ -50,7 +50,7 @@ dependencies:
   flutter_dropdown_search: ^0.0.4
   autocomplete_textfield: ^2.0.1
   searchfield: ^0.9.9
-  dropdown_button2: ^2.3.9
+  dropdown_button2: ^2.3.8
 
 dev_dependencies:
   flutter_test:
