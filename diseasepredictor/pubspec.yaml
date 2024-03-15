@@ -46,6 +46,11 @@ dependencies:
   firebase_storage: ^11.6.9
   image_picker: ^1.0.7
   cloud_firestore: ^4.15.8
+  dropdown_search: ^5.0.6
+  flutter_dropdown_search: ^0.0.4
+  autocomplete_textfield: ^2.0.1
+  searchfield: ^0.9.9
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

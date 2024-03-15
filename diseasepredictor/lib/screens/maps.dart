@@ -66,11 +66,12 @@ class _MapsScreenState extends State<Maps> {
 
       myMarker.add(
         Marker(
-            markerId: const MarkerId('Second'),
-            position: LatLng(value.latitude, value.longitude),
-            infoWindow: const InfoWindow(
-              title: 'My Location',
-            )),
+          markerId: const MarkerId('Second'),
+          position: LatLng(value.latitude, value.longitude),
+          infoWindow: const InfoWindow(
+            title: 'My Location',
+          ),
+        ),
       );
       CameraPosition cameraPosition = CameraPosition(
         target: LatLng(value.latitude, value.longitude),

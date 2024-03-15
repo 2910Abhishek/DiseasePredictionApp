@@ -2,7 +2,7 @@ import numpy as np
 import pickle 
 from flask import Flask, request, jsonify
 
-model = pickle.load(open('D:\ML HeathCare App SGP - II\DiseasePredictionApp\FlaskAPI\TrainedModel', 'rb'))
+model = pickle.load(open('TrainedModel', 'rb'))
 
 app = Flask(__name__)
 
@@ -76,4 +76,4 @@ def prediction():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host= 'Your_IPV4_Address', port= 5000)
+    app.run(debug=True,host= '192.168.130.109', port= 5000)
