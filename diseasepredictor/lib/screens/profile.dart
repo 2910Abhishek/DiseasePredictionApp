@@ -86,10 +86,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(padding: EdgeInsets.only(top: 15, bottom: 10)),
                   CircleAvatar(
                     radius: 60,
-                    backgroundImage: _profileImageUrl.isNotEmpty
-                        ? NetworkImage(_profileImageUrl)
-                        : AssetImage('assets/images/default_image.png')
-                            as ImageProvider,
                   ),
                   SizedBox(height: 25),
                   Text(
@@ -121,8 +117,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Previous Diseases'),
-          content: SingleChildScrollView(
-            child: Column(
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 300,
+            child: ListView(
               children: _previousDiseases.map((disease) {
                 return ListTile(
                   title: Text(disease.diseaseName),
