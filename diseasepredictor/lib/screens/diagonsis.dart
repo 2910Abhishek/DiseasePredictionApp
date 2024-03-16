@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DiagonsisScreen extends StatefulWidget {
@@ -15,6 +17,36 @@ class DiagonsisScreen extends StatefulWidget {
 }
 
 class _DiagonsisScreenState extends State<DiagonsisScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _saveResultToFirestore();
+  }
+
+  Future<void> _saveResultToFirestore() async {
+    try {
+      // Get the current user
+      final User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Reference to the user's document in Firestore
+        final DocumentReference userRef =
+            FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+        // Update the user's document with the diagnosis result
+        await userRef.set({
+          'diagnosisResult': widget.result,
+        }, SetOptions(merge: true));
+
+        print('Diagnosis result saved to Firestore.');
+      } else {
+        print('User not logged in.');
+      }
+    } catch (error) {
+      print('Error saving diagnosis result: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print('Selected Symptoms: ${widget.selectedSymptoms}'); // Debug print
