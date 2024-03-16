@@ -16,6 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String _username = '';
   late String _email = '';
   late String _profileImageUrl = '';
+  List<PreviousDisease> _previousDiseases = [];
 
   @override
   void initState() {
@@ -52,6 +53,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  Future<void> _fetchPreviousDiseases() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_currentUser!.uid)
+        .collection('previous_diseases')
+        .orderBy('diagnosis_date', descending: true)
+        .get();
+
+    setState(() {
+      _previousDiseases = snapshot.docs.map((doc) {
+        return PreviousDisease(
+          diseaseName: doc['disease_name'],
+          diagnosisDate: doc['diagnosis_date'].toDate(),
+        );
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     radius: 60,
                     backgroundImage: _profileImageUrl.isNotEmpty
                         ? NetworkImage(_profileImageUrl)
-                        : AssetImage('assests/images/default_image.png')
+                        : AssetImage('assets/images/default_image.png')
                             as ImageProvider,
                   ),
                   SizedBox(height: 25),
@@ -84,8 +103,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   SizedBox(height: 25),
                   ElevatedButton(
-                    onPressed: () {
-                      // Navigate to history screen or perform any action
+                    onPressed: () async {
+                      await _fetchPreviousDiseases();
+                      _showPreviousDiseasesDialog(context);
                     },
                     child: Text('History'),
                   ),
@@ -94,4 +114,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
     );
   }
+
+  Future<void> _showPreviousDiseasesDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Previous Diseases'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: _previousDiseases.map((disease) {
+                return ListTile(
+                  title: Text(disease.diseaseName),
+                  subtitle: Text('Diagnosis Date: ${disease.diagnosisDate}'),
+                );
+              }).toList(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class PreviousDisease {
+  final String diseaseName;
+  final DateTime diagnosisDate;
+
+  PreviousDisease({
+    required this.diseaseName,
+    required this.diagnosisDate,
+  });
 }

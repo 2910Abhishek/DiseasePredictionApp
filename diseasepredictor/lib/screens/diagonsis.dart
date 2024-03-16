@@ -25,18 +25,16 @@ class _DiagonsisScreenState extends State<DiagonsisScreen> {
 
   Future<void> _saveResultToFirestore() async {
     try {
-      // Get the current user
       final User? user = FirebaseAuth.instance.currentUser;
-
       if (user != null) {
-        // Reference to the user's document in Firestore
-        final DocumentReference userRef =
-            FirebaseFirestore.instance.collection('users').doc(user.uid);
+        final CollectionReference userRef =
+            FirebaseFirestore.instance.collection('users');
 
-        // Update the user's document with the diagnosis result
-        await userRef.set({
-          'diagnosisResult': widget.result,
-        }, SetOptions(merge: true));
+        // Add the diagnosis to the 'previous_diseases' subcollection
+        await userRef.doc(user.uid).collection('previous_diseases').add({
+          'disease_name': widget.result,
+          'diagnosis_date': DateTime.now(),
+        });
 
         print('Diagnosis result saved to Firestore.');
       } else {
