@@ -86,6 +86,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(padding: EdgeInsets.only(top: 15, bottom: 10)),
                   CircleAvatar(
                     radius: 60,
+                    backgroundImage: _profileImageUrl.isNotEmpty
+                        ? NetworkImage(_profileImageUrl)
+                        : AssetImage('assets/images/default_image.png')
+                            as ImageProvider,
                   ),
                   SizedBox(height: 25),
                   Text(
