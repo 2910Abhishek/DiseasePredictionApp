@@ -48,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .child('user_Image')
         .child('${_currentUser!.uid}.jpg');
     final url = await ref.getDownloadURL();
+    print("Profile Image URL: $url"); // Debug print statement
     setState(() {
       _profileImageUrl = url;
     });
