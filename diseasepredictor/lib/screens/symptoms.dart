@@ -246,6 +246,30 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
   }
 
   void _submitSymptoms() async {
+    if (selectedSymptoms.length < 3) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Please Select Atleast 3 Symtpoms !",
+              style: TextStyle(fontSize: 14),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+      return; // Exit the function
+    }
+
+    // Continue with submitting symptoms
     List<int> symptomVector = List.filled(131, 0);
 
     print('Selected Symptoms: $selectedSymptoms');
@@ -260,7 +284,7 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
     print('Symptom Vector: $symptomVector');
 
     try {
-      final url = Uri.parse('http://192.168.130.109:5000/prediction');
+      final url = Uri.parse('http://192.168.127.109:5000/prediction');
 
       final response = await http.post(
         url,

@@ -26,17 +26,45 @@ class _MapsScreenState extends State<Maps> {
       ),
     ),
     Marker(
-      markerId: MarkerId('Third'),
-      position: LatLng(22.25733400245275, 73.19924982521647),
+      markerId: MarkerId('Second'),
+      position: LatLng(22.602946462589316, 72.82155965660046),
       infoWindow: InfoWindow(
-        title: 'Tarshali Sussen Circle',
+        title: 'Charusat Hospital',
+      ),
+    ),
+    Marker(
+      markerId: MarkerId('Third'),
+      position: LatLng(22.621235613648143, 72.98698957578023),
+      infoWindow: InfoWindow(
+        title: 'Charusat Hospital',
       ),
     ),
     Marker(
       markerId: MarkerId('Fourth'),
-      position: LatLng(22.59906328385306, 72.81768950736505),
+      position: LatLng(23.028350041456186, 72.62282931823461),
       infoWindow: InfoWindow(
-        title: 'Charusat',
+        title: 'Narayana Hospital, Ahmedabad',
+      ),
+    ),
+    Marker(
+      markerId: MarkerId('Fifth'),
+      position: LatLng(23.00812683920746, 72.6087530858764),
+      infoWindow: InfoWindow(
+        title: 'Siddhi Vinayak Hospital',
+      ),
+    ),
+    Marker(
+      markerId: MarkerId('Fifth'),
+      position: LatLng(22.997971370892646, 72.61630592213353),
+      infoWindow: InfoWindow(
+        title: 'Pramukh Multi-speciality Hospital',
+      ),
+    ),
+    Marker(
+      markerId: MarkerId('Sixth'),
+      position: LatLng(22.317187965240237, 73.15782822879008),
+      infoWindow: InfoWindow(
+        title: 'Sterling Hospitals - Vadodara',
       ),
     ),
   ];
